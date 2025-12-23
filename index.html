@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindSell - Buy and Sell Platform</title>
+    <link rel="stylesheet" href="indexStyle.css">
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="top-bar">
+            <div class="container">
+                <p>Hi! <a href="#" class="link-primary">Sign In</a> or <a href="#" class="link-primary">Register</a></p>
+            </div>
+        </div>
+        
+        <div class="main-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <a href="/">
+                            <img src="Selling_transparent-.png" alt="FindSell Logo" style="height: 50px;">
+                        </a>
+                    </div>
+                    
+                    <div class="search-wrapper">
+                        <input type="text" class="search-input" placeholder="Search for items...">
+                        <button class="search-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        </button>
+                    </div>
+                  
+                    <div class="auth-buttons">
+                        <button class="btn-auth" id="login-btn">Login</button>
+                        <button class="btn-auth" id="signup-btn">Sign Up</button>
+                        <button class="btn-sell" id="sell-btn">Sell</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+        <nav class="categories-nav">
+            <div class="container">
+                <ul class="nav-list">
+                    <li><a href="#" class="nav-link" data-tag="Saved">Saved</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Electronics">Electronics</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Fashion">Fashion</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Jewellery and Watches">Jewellery and Watches</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Toys">Toys</a></li>
+                    <li><a href="#" class="nav-link" data-tag="collectables">Collectables</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Home">Home</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Login Panel -->
+        <div class="auth-panel" id="login-panel">
+            <div class="auth-content">
+                <h3>Login</h3>
+                <a href="login.html" class="auth-link">Login In</a>
+                <button class="social-btn">Google</button>
+                <button class="social-btn">Facebook</button>
+                <p>New user? <a href="sign%20up.html">Sign up here</a></p>
+            </div>
+        </div>
+
+        <!-- Sell Panel -->
+        <div class="auth-panel" id="sell-panel">
+            <div class="auth-content">
+                <p>You haven't logged in yet</p>
+                <p>Log In <a href="login.html">here</a></p>
+            </div>
+        </div>
+    </header>
+    
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <main class="main-content" style="margin-top:15vw">
+        <div class="container">
+            <section class="game-section" id="game">
+                <div class="game-slide active">
+                    <div class="game-content">
+                        <h2>Welcome To FindSell</h2>
+                        <p>Check In To Get More Reward!</p>
+                        <button id="check" class="game-btn">Go To Checking Centre!</button>
+                        <button class="next-btn">Next</button>
+                    </div>
+                </div>
+                
+                <div class="game-slide">
+                    <div class="game-content">
+                        <h2>Fun Game</h2>
+                        <p>Win The Game For More Award!</p>
+                        <button id="go" class="game-btn">Let's Start</button>
+                        <button class="next-btn">Previous</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="trusted-sellers">
+                <h2>Trusted Sellers</h2>
+                <button id="but2" class="scroll-btn">Next</button>
+                <div class="sellers-container">
+                    <div id="loading-animation" style="display: flex; justify-content: center; width: 100%;">
+                        <dotlottie-player src="https://lottie.host/92d876b3-0b70-4bf0-beae-400c681ff9dd/YU72bij2XY.lottie" 
+                            background="transparent" 
+                            speed="1" 
+                            style="width: 300px; height: 300px" 
+                            loop 
+                            autoplay>
+                        </dotlottie-player>
+                    </div>
+                    <div id="seller" class="sellers-scroll">
+                        <!-- Sellers will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <section class="for-you">
+                <h2>Recommended for You</h2>
+                <div id="recommended-loading" style="display: flex; justify-content: center; width: 100%;">
+                    <dotlottie-player src="https://lottie.host/92d876b3-0b70-4bf0-beae-400c681ff9dd/YU72bij2XY.lottie" 
+                        background="transparent" 
+                        speed="1" 
+                        style="width: 300px; height: 300px" 
+                        loop 
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+                <div class="products-grid">
+                    <!-- Product cards will be loaded here dynamically -->
+                </div>
+                <div class="load-more">
+                    <button class="btn-load-more">Load More</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Initialize user state
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const sellBtn = document.getElementById('sell-btn');
+        const loginPanel = document.getElementById('login-panel');
+        const sellPanel = document.getElementById('sell-panel');
+        const loadingAnimation = document.getElementById('loading-animation');
+        const recommendedLoadingAnimation = document.getElementById('recommended-loading');
+        const APIKEY = '67aa072d020c065268e653c8';
+        const API_URL = "https://testa-cdb8.restdb.io/rest/product";
+
+        function togglePanel(panel) {
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+            } else {
+                panel.style.display = 'block';
+            }
+        }
+
+        loginBtn.addEventListener('click', () => togglePanel(loginPanel));
+        signupBtn.addEventListener('click', () => togglePanel(loginPanel));
+        sellBtn.addEventListener('click', () => togglePanel(sellPanel));
+
+        // Close panels when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!loginPanel.contains(event.target) && !loginBtn.contains(event.target) && !signupBtn.contains(event.target)) {
+                loginPanel.style.display = 'none';
+            }
+            if (!sellPanel.contains(event.target) && !sellBtn.contains(event.target)) {
+                sellPanel.style.display = 'none';
+            }
+        });
+
+        // Game section functionality
+        const checkBtn = document.getElementById('check');
+        const goBtn = document.getElementById('go');
+        const gameSection = document.getElementById('game');
+        const nextBtns = document.getElementsByClassName('next-btn');
+
+        function requireLogin() {
+            alert('Please Log In First');
+            window.location.href = 'login.html';
+        }
+
+        checkBtn.addEventListener('click', requireLogin);
+        goBtn.addEventListener('click', requireLogin);
+
+        // Game slides navigation
+        let currentSlide = 0;
+        const slides = gameSection.getElementsByClassName('game-slide');
+
+        Array.from(nextBtns).forEach(btn => {
+            btn.addEventListener('click', () => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = currentSlide === 0 ? 1 : 0;
+                slides[currentSlide].classList.add('active');
+            });
+        });
+
+        // Trusted sellers section
+        const sellersContainer = document.getElementById('seller');
+        const scrollBtn = document.getElementById('but2');
+        
+        // Fetch sellers data
+        fetch(API_URL, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache"
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Hide loading animation once data is loaded
+            loadingAnimation.style.display = 'none';
+            
+            if (!Array.isArray(data) || data.length === 0) {
+                sellersContainer.innerHTML = '<p>No sellers available at the moment.</p>';
+                return;
+            }
+            
+            data.forEach(account => {
+                const sellerCard = document.createElement("div");
+                sellerCard.className = "seller-card";
+                
+                const avatar = document.createElement('img');
+                avatar.src = account.avatar || 'https://via.placeholder.com/80';
+                avatar.className = "seller-avatar";
+                avatar.alt = `${account.name || 'User'}'s avatar`;
+                avatar.addEventListener("click", () => {
+                    localStorage.setItem("selectedUser", JSON.stringify({
+                        otherid: account.usrid,
+                        otheremail: account.email,
+                        otherbio: account.bio,
+                        otheravatar: account.avatar,
+                        othername: account.name
+                    }));
+                    window.location.href = 'user.html';
+                });
+                
+                const name = document.createElement("h3");
+                name.textContent = account.name || "User";
+                
+                const email = document.createElement("p");
+                email.textContent = account.email || "No Email";
+                
+                sellerCard.appendChild(avatar);
+                sellerCard.appendChild(name);
+                sellerCard.appendChild(email);
+                
+                sellersContainer.appendChild(sellerCard);
+            });
+
+            // Initialize scroll functionality
+            let scrollPosition = 0;
+            const cardWidth = 95; // Width in vw units
+            
+            scrollBtn.addEventListener('click', () => {
+                const cards = sellersContainer.children;
+                if (cards.length > 0) {
+                    scrollPosition = (scrollPosition + 1) % cards.length;
+                    sellersContainer.style.transform = `translateX(-${scrollPosition * cardWidth}vw)`;
+                }
+            });
+        })
+        .catch(error => {
+            // Hide loading animation and show error message
+            loadingAnimation.style.display = 'none';
+            console.error('Error:', error);
+            sellersContainer.innerHTML = '<p>Failed to load trusted sellers. Please try again later.</p>';
+        });
+
+        // Recommended products section
+        const recommendedContainer = document.querySelector(".products-grid");
+
+        async function loadRecommendedProducts() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache"
+                    }
+                });
+
+                const products = await response.json();
+                
+                // Hide loading animation once data is loaded
+                recommendedLoadingAnimation.style.display = 'none';
+                recommendedContainer.innerHTML = "";
+
+                products.forEach(product => {
+                    const productCard = document.createElement("div");
+                    productCard.classList.add("product-card");
+
+                    function base64ToBlobUrl(base64, contentType = "image/png") {
+                        const byteCharacters = atob(base64);
+                        const byteNumbers = new Array(byteCharacters.length);
+                        for (let i = 0; i < byteCharacters.length; i++) {
+                            byteNumbers[i] = byteCharacters.charCodeAt(i);
+                        }
+                        const byteArray = new Uint8Array(byteNumbers);
+                        const blob = new Blob([byteArray], { type: contentType });
+                        return URL.createObjectURL(blob);
+                    }
+
+                    const base64Image = product.url;
+                    const imageUrl = base64ToBlobUrl(base64Image, "image/png");
+
+                    productCard.innerHTML = `
+                        <div class="product-image">
+                            <img src="${imageUrl}" alt="${product.name}" style="width: 100%; height: auto;">
+                        </div>
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p class="price">$${product.price || 'N/A'}</p>
+                        </div>
+                    `;
+
+                    productCard.addEventListener("click", () => {
+                        localStorage.setItem("product-name", product.name);
+                        localStorage.setItem("product-price", product.price);
+                        localStorage.setItem("product-description", product.Description);
+                        localStorage.setItem("product-brand", product.Brand);
+                        localStorage.setItem("product-image", imageUrl);
+                        localStorage.setItem("product-id", product.productID);
+                        localStorage.setItem("selectedProduct", JSON.stringify(product));
+                        window.location.href = "productdetail.html";
+                    });
+
+                    recommendedContainer.appendChild(productCard);
+                });
+            } catch (error) {
+                // Hide loading animation and show error message
+                recommendedLoadingAnimation.style.display = 'none';
+                console.error("Failed to fetch recommended products", error);
+                recommendedContainer.innerHTML = '<p>Failed to load recommended products. Please try again later.</p>';
+            }
+        }
+
+        // Load recommended products when the page loads
+        loadRecommendedProducts();
+
+        // Category navigation functionality
+        document.addEventListener("DOMContentLoaded", function () {
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            navLinks.forEach(link => {
+                link.addEventListener("click", async function (event) {
+                    event.preventDefault();
+
+                    const tag = this.getAttribute("data-tag");
+                    
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "x-apikey": APIKEY,
+                                "Cache-Control": "no-cache"
+                            }
+                        });
+                        const products = await response.json();
+                        const filteredProducts = products.filter(product => product.tag === tag);
+
+                        if (filteredProducts.length > 0) {
+                            const firstProduct = filteredProducts[0];
+                            localStorage.setItem("product-name", firstProduct.name);
+                            localStorage.setItem("product-price", firstProduct.price);
+                            localStorage.setItem("product-description", firstProduct.Description);
+                            localStorage.setItem("product-brand", firstProduct.Brand);
+                            localStorage.setItem("product-image", firstProduct.url);
+                            localStorage.setItem("product-id", firstProduct.productID);
+                            localStorage.setItem("selectedProduct", JSON.stringify(firstProduct));
+                            window.location.href = "productdetail.html";
+                        } else {
+                            alert("No products found in this category.");
+                        }
+                    } catch (error) {
+                        console.error("Failed to fetch products", error);
+                        alert("Failed to load products. Please try again later.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

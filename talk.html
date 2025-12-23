@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - FindSell</title>
+    <link rel="stylesheet" href="talkStyle.css">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <a href="index2.html">
+                <img src="Selling_transparent-.png" alt="FindSell" class="logo">
+            </a>
+            
+            <div class="search-wrapper">
+                <input type="text" class="search-input" placeholder="Search for items...">
+                <button class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="nav-buttons">
+                <div class="account-wrapper">
+                    <button class="my-account-btn" id="account-btn">My Account</button>
+                    <div class="dropdown">
+                        <a href="myaccount.html">My Account</a>
+                        <a href="myproduct.html">My Products</a>
+                        <a href="myfriend.html">My Friends</a>
+                        <a href="myaward.html">Awards</a>
+                    </div>
+                </div>
+                <a href="product.html" class="sell-btn">Sell</a>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="chat-container">
+            <div class="chat-box">
+                <div class="chat-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="10" r="3"/>
+                        <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+                    </svg>
+                    Chat with <span id="u-n">User</span>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input 
+                        type="text" 
+                        id="userInput" 
+                        placeholder="Type a message..." 
+                        onkeypress="if(event.key === 'Enter') document.getElementById('sendMessage').click()"
+                    >
+                    <button id="sendMessage">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m22 2-7 20-4-9-9-4Z"/>
+                            <path d="M22 2 11 13"/>
+                        </svg>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let others = localStorage.getItem("selectedUser");
+        let other = JSON.parse(others);
+        let userId = localStorage.getItem("usrid");
+        let usrmail = localStorage.getItem("usremail");
+        
+        // Update user name in header
+        document.getElementById("u-n").textContent = other.othername || "User";
+        
+        // Account dropdown functionality
+        const accountBtn = document.getElementById('account-btn');
+        const dropdown = document.querySelector('.dropdown');
+        
+        accountBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target) && event.target !== accountBtn) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        const API_URL = "https://testa-cdb8.restdb.io/rest/message";
+        const API_KEY = "67aa072d020c065268e653c8";
+        const otherUserId = other.otherid;
+
+        // Auto-scroll to bottom of chat
+        function scrollToBottom() {
+            const chatMessages = document.getElementById("chatMessages");
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message function
+        async function sendMessage() {
+            let userInput = document.getElementById("userInput");
+            let userMessage = userInput.value.trim();
+            
+            if (!userMessage) return;
+            
+            let chatBox = document.getElementById("chatMessages");
+            let userBubble = document.createElement("div");
+            userBubble.classList.add("message", "user");
+            userBubble.textContent = userMessage;
+            chatBox.appendChild(userBubble);
+            
+            userInput.value = "";
+            scrollToBottom();
+            
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "x-apikey": API_KEY
+                    },
+                    body: JSON.stringify({
+                        posterid: userId,
+                        usrid: otherUserId,
+                        content: userMessage,
+                        type: "msg"
+                    })
+                });
+            } catch (error) {
+                console.error("Failed to send message", error);
+            }
+        }
+
+        // Fetch messages function
+        async function fetchMessages() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": API_KEY,
+                        "Cache-Control": "no-cache",
+                    }
+                });
+                const messages = await response.json();
+                let chatBox = document.getElementById("chatMessages");
+                chatBox.innerHTML = "";
+                
+                messages.forEach(msg => {
+                    if (msg.usrid === other.otherid && msg.posterid === userId) {
+                        let msgBubble = document.createElement("div");
+                        msgBubble.classList.add("message", msg.posterid === userId ? "user" : "bot");
+                        msgBubble.textContent = msg.content;
+                        chatBox.appendChild(msgBubble);
+                    }
+                });
+                
+                scrollToBottom();
+            } catch (error) {
+                console.error("Failed to fetch messages", error);
+            }
+        }
+
+        // Event listeners
+        document.getElementById("sendMessage").addEventListener("click", sendMessage);
+        
+        // Initial fetch
+        fetchMessages();
+        
+        // Periodic refresh (every 5 seconds)
+        setInterval(fetchMessages, 5000);
+    </script>
+</body>
+</html>

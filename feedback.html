@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindSell - Feedback & Support</title>
+    <link rel="stylesheet" href="feedback.css">
+</head>
+<body>
+    <header class="header">
+        <div class="main-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <a href="/">
+                            <img src="Selling_transparent-.png" alt="FindSell Logo" style="height: 50px;">
+                        </a>
+                    </div>
+                    <div class="auth-buttons">
+                        <a href="index2.html" class="btn-back">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="submit">Submit Feedback</button>
+                <button class="tab-btn" data-tab="history">Feedback History</button>
+            </div>
+
+            <div class="tab-content active" id="submit-tab">
+                <h2>Submit Feedback</h2>
+                <form id="feedback-form" class="feedback-form">
+                    <div class="form-group">
+                        <label for="email">Email Address:</label>
+                        <input type="email" id="email" required placeholder="Your email address">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category" required>
+                            <option value="">Select a category</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="account">Account Problem</option>
+                            <option value="payment">Payment Issue</option>
+                            <option value="suggestion">Suggestion</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priority">Priority:</label>
+                        <select id="priority" required>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject:</label>
+                        <input type="text" id="subject" required placeholder="Brief description of the issue">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea id="description" required placeholder="Please provide detailed information about your feedback"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Feedback</button>
+                </form>
+            </div>
+
+            <div class="tab-content" id="history-tab">
+                <h2>My Feedback History</h2>
+                <div class="feedback-list">
+                    <!-- Feedback history will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rating Modal -->
+    <div class="modal" id="rating-modal">
+        <div class="modal-content">
+            <h3>Rate Support Response</h3>
+            <div class="rating">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+            </div>
+            <textarea id="rating-comment" placeholder="Additional comments (optional)"></textarea>
+            <div class="modal-buttons">
+                <button id="submit-rating">Submit Rating</button>
+                <button id="close-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="feedback.js"></script>
+</body>
+</html>

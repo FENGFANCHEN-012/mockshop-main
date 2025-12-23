@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindSell HomePage2</title>
+    <link rel="stylesheet" href="index2Style.css">
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="top-bar">
+            <div class="container">
+                <p>Welcome! <span id="usrem"></span></p>
+            </div>
+        </div>
+        
+        <div class="main-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <a href="index2.html">
+                            <img src="Selling_transparent-.png" alt="FindSell Logo" style="height: 40px;">
+                        </a>
+                    </div>
+                    
+                    <div class="search-wrapper">
+                        <input type="text" class="search-input" placeholder="Search for items...">
+                        <button class="search-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        </button>
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                    
+                    <div class="auth-buttons">
+                        <button class="btn-auth" id="account-btn">My Account</button>
+                        <div class="dropdown">
+                            <div class="tag"><a href="myaccount.html">My Account</a></div>
+                            <div class="tag"><a href='myproduct.html'>My Products</a></div>
+                            <div class="tag"><a href='myfriend.html'>My Friends</a></div>
+                            <div class="tag"><a href='myaward.html'>Awards</a></div>
+                            <div class="tag"><a href='feedback.html'>Feedback</a></div>
+                        </div>
+                        <a href="product.html" class="btn-sell">Sell</a>
+                    </div>
+                    <div id="message">
+                        <img src="—Pngtree—mail icon_5990813.png" style="width:5.5vw">
+                    </div>
+                    
+                    <div id="message-box">
+                        <h3>Messages</h3>
+                        <div id="message-content">
+                        </div>
+                        <button id="close-message-box">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="categories-nav">
+            <div class="container">
+                <ul class="nav-list">
+                    <li><a href="#" class="nav-link" data-tag="Saved">Saved</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Electronics">Electronics</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Fashion">Fashion</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Jewellery and Watches">Jewellery and Watches</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Toys">Toys</a></li>
+                    <li><a href="#" class="nav-link" data-tag="collectables">Collectables</a></li>
+                    <li><a href="#" class="nav-link" data-tag="Home">Home</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="game-section" id="game">
+                <div class="game-slide active">
+                    <div class="game-content">
+                        <h2>Welcome To FindSell</h2>
+                        <p>Check In To Get A Reward!</p>
+                        <div class="game-buttons">
+                            <button id="check" class="game-btn">Go To Check-in Centre!</button>
+                            <button class="next-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-slide">
+                    <div class="game-content">
+                        <h2>Fun Game</h2>
+                        <p>Win The Game For More Rewards!</p>
+                        <div class="game-buttons">
+                            <button id="go" class="game-btn">Let's Start</button>
+                            <button class="next-btn">Previous</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="trusted-sellers">
+                <h2>Trusted Sellers</h2>
+                <button id="but2" class="scroll-btn">Next</button>
+                <div class="sellers-container">
+                    <div id="loading-animation" style="display: flex; justify-content: center; width: 100%;">
+                        <dotlottie-player src="https://lottie.host/92d876b3-0b70-4bf0-beae-400c681ff9dd/YU72bij2XY.lottie" 
+                            background="transparent" 
+                            speed="1" 
+                            style="width: 300px; height: 300px" 
+                            loop 
+                            autoplay>
+                        </dotlottie-player>
+                    </div>
+                    <div id="seller" class="sellers-scroll">
+                        <!-- Sellers will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <section class="for-you">
+                <h2>Recommended for You</h2>
+                <div id="recommended-loading" style="display: flex; justify-content: center; width: 100%;">
+                    <dotlottie-player src="https://lottie.host/92d876b3-0b70-4bf0-beae-400c681ff9dd/YU72bij2XY.lottie" 
+                        background="transparent" 
+                        speed="1" 
+                        style="width: 300px; height: 300px" 
+                        loop 
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-image"></div>
+                        <div class="product-info">
+                            <h3>Product Title</h3>
+                            <p class="price">$199.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="load-more">
+                    <button class="btn-load-more">Load More</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Initialize variables
+        let friendList = new Set(); 
+        const message = "https://testa-cdb8.restdb.io/rest/message"
+        const testmessage = "https://testa-cdb8.restdb.io/rest/message"
+        const testaccount = "https://testa-cdb8.restdb.io/rest/account";
+        const account = "https://testa-cdb8.restdb.io/rest/account"
+        const api = "67aa072d020c065268e653c8";
+        const testapi = "67aa072d020c065268e653c8"
+        const messagetest = "https://testa-cdb8.restdb.io/rest/message"
+        const usrmail = localStorage.getItem("usremail");
+        const idnum = localStorage.getItem("usrid");
+        
+        let selectedProducts = JSON.parse(localStorage.getItem("selectedProducts")) || [];
+        let allProducts = []; 
+
+        document.getElementById("message").addEventListener("click", function(){
+            document.getElementById("message-box").style.display='block'
+            loadMessages();
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.querySelector(".search-input");
+            const resultsContainer = document.getElementById("searchResults");
+            const clearHistoryBtn = document.getElementById("clearHistory");
+
+          // ===============================
+// DISPLAY TRUSTED SELLERS (USERS)
+// ===============================
+async function loadSellers() {
+    const sellersContainer = document.getElementById("seller");
+    const loadingAnimation = document.getElementById("loading-animation");
+
+    try {
+        const response = await fetch("https://testa-cdb8.restdb.io/rest/account", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": api,
+                "Cache-Control": "no-cache"
+            }
+        });
+
+        const users = await response.json();
+
+        // Hide loading animation
+        loadingAnimation.style.display = "none";
+        sellersContainer.innerHTML = "";
+
+        // 
+        const sellers = users.filter(u => u._id !== idnum);
+
+        sellers.forEach(user => {
+            const card = document.createElement("div");
+            card.className = "seller-card";
+
+            const avatar = document.createElement("img");
+            avatar.className = "seller-avatar";
+            avatar.src = user.avatar || "default-avatar.png";
+
+            avatar.addEventListener("click", () => {
+                localStorage.setItem("selectedUser", JSON.stringify({
+                    otherid: user._id,
+                    otheremail: user.email,
+                    othername: user.name,
+                    otherbio: user.bio,
+                    otheravatar: user.avatar
+                }));
+                window.location.href = "user.html";
+            });
+
+            const name = document.createElement("h3");
+            name.textContent = user.name || "Unknown Seller";
+
+            const email = document.createElement("p");
+            email.textContent = user.email || "No Email";
+
+            card.appendChild(avatar);
+            card.appendChild(name);
+            card.appendChild(email);
+
+            sellersContainer.appendChild(card);
+        });
+
+        // Scroll logic
+        let index = 0;
+        document.getElementById("but2").onclick = () => {
+            if (sellers.length === 0) return;
+            index = (index + 1) % sellers.length;
+            sellersContainer.style.transform = `translateX(-${index * 95}vw)`;
+        };
+
+    } catch (err) {
+        console.error("Failed to load sellers:", err);
+        loadingAnimation.style.display = "none";
+    }
+}
+           loadSellers(); 
+
+            searchInput.addEventListener("input", function () {
+                const query = this.value.trim().toLowerCase();
+                resultsContainer.innerHTML = "";
+
+                if (query.length < 1) {
+                    resultsContainer.style.display = "none"; 
+                    return;
+                }
+
+                let filteredProducts = selectedProducts.filter(product =>
+                    product.name.toLowerCase().includes(query) || 
+                    product.Description.toLowerCase().includes(query)
+                );
+
+                if (filteredProducts.length === 0) {
+                    filteredProducts = allProducts.filter(product =>
+                        product.name.toLowerCase().includes(query) || 
+                        product.Description.toLowerCase().includes(query)
+                    );
+                }
+
+                if (filteredProducts.length === 0) {
+                    resultsContainer.style.display = "none"; 
+                    return;
+                }
+
+                filteredProducts.forEach(product => {
+                    const item = document.createElement("div");
+                    item.classList.add("search-result-item");
+                    item.textContent = product.name;
+
+                    item.addEventListener("click", function () {
+                        if (!selectedProducts.some(p => p.id === product.id)) {
+                            selectedProducts.push(product);
+                            localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
+                        }
+
+                        localStorage.setItem("selectedProduct", JSON.stringify(product));
+                        window.location.href = "product.html";
+                    });
+
+                    resultsContainer.appendChild(item);
+                });
+
+                resultsContainer.style.display = "block"; 
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
+                    resultsContainer.style.display = "none";
+                }
+            });
+
+            if (clearHistoryBtn) {
+                clearHistoryBtn.addEventListener("click", function () {
+                    localStorage.removeItem("selectedProducts");
+                    selectedProducts = [];
+                    alert("Search history cleared!");
+                });
+            }
+        });
+
+        document.getElementById("usrem").innerHTML = usrmail;
+
+        // Account dropdown functionality
+        const accountBtn = document.getElementById('account-btn');
+        const dropdown = document.querySelector('.dropdown');
+        
+        accountBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target) && event.target !== accountBtn) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Game section functionality
+        const checkBtn = document.getElementById('check');
+        const goBtn = document.getElementById('go');
+        const gameSection = document.getElementById('game');
+        const nextBtns = document.getElementsByClassName('next-btn');
+        const slides = gameSection.getElementsByClassName('game-slide');
+        let currentSlide = 0;
+
+        checkBtn.addEventListener('click', () => {
+            window.location.href = "checkin.html";
+        });
+
+        goBtn.addEventListener('click', () => {
+            window.location.href = "game.html";
+        });
+
+        Array.from(nextBtns).forEach(btn => {
+            btn.addEventListener('click', () => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = currentSlide === 0 ? 1 : 0;
+                slides[currentSlide].classList.add('active');
+            });
+        });
+
+        // Fetch and display sellers
+        fetch("https://testa-cdb8.restdb.io/rest/product", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": api,
+                "Cache-Control": "no-cache",
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const loadingAnimation = document.getElementById("loading-animation");
+            const sellersContainer = document.getElementById("seller");
+            const filteredData = data.filter(account => account.usrid !== idnum);
+            
+            // Hide loading animation once data is ready
+            loadingAnimation.style.display = "none";
+            
+            filteredData.forEach(account => {
+                const sellerCard = document.createElement("div");
+                sellerCard.className = "seller-card";
+                
+                const avatar = document.createElement('img');
+                avatar.src = account.avatar;
+                avatar.className = "seller-avatar";
+                avatar.addEventListener("click", () => {
+                    localStorage.setItem("selectedUser", JSON.stringify({
+                        otherid: account.usrid,
+                        otheremail: account.email,
+                        otherbio: account.bio,
+                        otheravatar: account.avatar,
+                        othername: account.name
+                    }));
+                    window.location.href = 'user.html';
+                });
+                
+                const name = document.createElement("h3");
+                name.textContent = account.name || "User";
+                
+                const email = document.createElement("p");
+                email.textContent = account.email || "No Email";
+                
+                sellerCard.appendChild(avatar);
+                sellerCard.appendChild(name);
+                sellerCard.appendChild(email);
+                
+                sellersContainer.appendChild(sellerCard);
+            });
+
+            // Initialize scroll functionality
+            let scrollPosition = 0;
+            const scrollBtn = document.getElementById('but2');
+            
+            scrollBtn.addEventListener('click', () => {
+                const cards = sellersContainer.children;
+                scrollPosition = (scrollPosition + 1) % cards.length;
+                sellersContainer.style.transform = `translateX(-${scrollPosition * 95}vw)`;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Hide loading animation on error as well
+            const loadingAnimation = document.getElementById("loading-animation");
+            loadingAnimation.style.display = "none";
+        });
+
+        // Messages functionality
+        document.addEventListener("DOMContentLoaded", function () {
+            setInterval(loadMessages, 30000); 
+        });
+
+        async function loadMessages() {
+            console.log("Checking messages...");
+
+            try {
+                const response = await fetch(message, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": api,
+                        "Cache-Control": "no-cache",
+                    },
+                });
+
+                const data = await response.json();
+                const messageContent = document.getElementById("message-content");
+                messageContent.innerHTML = "";
+
+                let userId = localStorage.getItem("usrid")
+                let hasMessages = false;
+
+                data.forEach(msg => {
+                    if (msg.usrid === userId ) {
+                        hasMessages = true;
+                        const messageItem = document.createElement("div");
+                        messageItem.classList.add("message-item");
+                        messageItem.setAttribute('data-msg-id', msg._id);
+
+                        if (msg.type === "Frequest") {
+                            messageItem.innerHTML = `
+                                <p><strong>${msg.sender}</strong> sent you a friend request.</p>
+                                <button class="btn-accept" onclick="acceptFriend('${msg.posterid}', '${msg._id}', this)">Accept</button>
+                                <button class="btn-reject" onclick="rejectFriend('${msg.posterid}', '${msg._id}', this)">Reject</button>
+                            `;
+                        } else if (msg.type === "msg") {
+                            messageItem.innerHTML = `
+                                <p><strong>${msg.sender}:</strong> ${msg.content}</p>
+                            `;
+                        }
+
+                        messageContent.appendChild(messageItem);
+                    }
+                });
+
+                if (!hasMessages) {
+                    messageContent.innerHTML = "<p>No new messages.</p>";
+                }
+            } catch (error) {
+                console.error("Error loading messages:", error);
+            }
+        }
+
+        document.getElementById("close-message-box").addEventListener("click", () => {
+            document.getElementById("message-box").style.display = "none";
+        });
+
+        function accept(posterID, btn) {
+            const messageItem = btn.closest('.message-item');
+            const messageId = messageItem.getAttribute('data-msg-id');
+            fetch(messagetest, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": api,
+                    "Cache-Control": "no-cache",
+                },
+                body: JSON.stringify({
+                    usrid: posterID,
+                    posterid: idnum,
+                    content: "Approve your friend request",
+                    type: "msg"
+                })
+            })
+            
+            friendList.add(posterID); 
+            fetch(`${message}/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": testapi,
+                    "Cache-Control": "no-cache",
+                }
+            });
+            window.location.reload();
+        }
+
+        function reject(posterID, btn) {
+            const messageItem = btn.closest('.message-item');
+            const messageId = messageItem.getAttribute('data-msg-id');
+            fetch(message, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": api,
+                    "Cache-Control": "no-cache",
+                },
+                body: JSON.stringify({
+                    usrid: posterID,
+                    posterid: idnum,
+                    content: "Reject your friend request",
+                    type: "msg"
+                })
+            })
+            fetch(`${message}/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": testapi,
+                    "Cache-Control": "no-cache",
+                }
+            });
+            window.location.reload();
+        }
+
+        // Load recommended products
+        document.addEventListener("DOMContentLoaded", function () {
+            const recommendedContainer = document.querySelector(".products-grid");
+            const loadingAnimation = document.getElementById("recommended-loading");
+            const PRODUCT_API_URL = "https://testa-cdb8.restdb.io/rest/product";
+
+            async function loadRecommendedProducts() {
+                try {
+                    const response = await fetch(PRODUCT_API_URL, {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json", "x-apikey": api }
+                    });
+
+                    const products = await response.json();
+                    recommendedContainer.innerHTML = ""; 
+
+                    products.forEach(product => {
+                        const productCard = document.createElement("div");
+                        productCard.classList.add("product-card");
+
+                        productCard.innerHTML = `
+                            <div class="product-image">
+                                <img src="${product.image || 'default-image.jpg'}" alt="${product.name}" style="width: 100%; height: auto;">
+                            </div>
+                            <div class="product-info">
+                                <h3>${product.name}</h3>
+                                <p class="price">$${product.price || 'N/A'}</p>
+                            </div>
+                        `;
+
+                        function base64ToBlobUrl(base64, contentType = "image/png") {
+                            const byteCharacters = atob(base64);
+                            const byteNumbers = new Array(byteCharacters.length);
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: contentType });
+                            return URL.createObjectURL(blob);
+                        }
+
+                        const base64Image = product.url; 
+                        const imageUrl = base64ToBlobUrl(base64Image, "image/png");
+                        
+                        productCard.addEventListener("click", () => {
+                            localStorage.setItem("product-name", product.name);
+                            localStorage.setItem("product-price", product.price);
+                            localStorage.setItem("product-description", product.Description);
+                            localStorage.setItem("product-brand", product.Brand);
+                            localStorage.setItem("product-image", imageUrl);
+                            localStorage.setItem("product-id", product.productID);
+                            localStorage.setItem("selectedProduct", JSON.stringify(product));
+                            window.location.href = "productdetail.html";
+                        });
+                        
+                        recommendedContainer.appendChild(productCard);
+                    });
+
+                    // Hide loading animation after products are loaded
+                    loadingAnimation.style.display = "none";
+
+                } catch (error) {
+                    console.error("Failed to fetch recommended products", error);
+                    // Hide loading animation on error
+                    loadingAnimation.style.display = "none";
+                }
+            }
+
+            loadRecommendedProducts(); 
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            navLinks.forEach(link => {
+                link.addEventListener("click", async function (event) {
+                    event.preventDefault(); 
+
+                    const tag = this.getAttribute("data-tag"); 
+                    const PRODUCT_API_URL = "https://testa-cdb8.restdb.io/rest/product";
+                    
+                    try {
+                        const response = await fetch(PRODUCT_API_URL, {
+                            method: "GET",
+                            headers: { "Content-Type": "application/json", "x-apikey":api}
+                        });
+                        const products = await response.json();
+                        const filteredProducts = products.filter(product => product.tag === tag);
+
+                        if (filteredProducts.length > 0) {
+                            const firstProduct = filteredProducts[0];
+                            localStorage.setItem("product-name", firstProduct.name);
+                            localStorage.setItem("product-price", firstProduct.price);
+                            localStorage.setItem("product-description", firstProduct.Description);
+                            localStorage.setItem("product-brand", firstProduct.Brand);
+                            localStorage.setItem("product-image", firstProduct.url);
+                            localStorage.setItem("product-id", firstProduct.productID);
+                            localStorage.setItem("selectedProduct", JSON.stringify(firstProduct));
+                            window.location.href = "productdetail.html";
+                        } else {
+                            alert("No products found in this category.");
+                        }
+                    } catch (error) {
+                        console.error("Failed to fetch products", error);
+                        alert("Failed to load products. Please try again later.");
+                    }
+                });
+            });
+        });
+
+        localStorage.setItem("friend", JSON.stringify([...friendList]));
+    </script>
+</body>
+</html>

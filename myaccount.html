@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - FindSell</title>
+    <link rel="stylesheet" href="myaccountStyle.css">
+</head>
+<body>
+    <header>
+        <div class="head">
+            <a href="index2.html">
+                <img class="logo" src="Selling_transparent-.png" alt="Find Sell">
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search" placeholder="Search for items...">
+                <button class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="account-container">
+                <button class="account-btn" id="account-btn">My Account</button>
+                <div class="dropdown">
+                    <a href="myaccount.html">My Account</a>
+                    <a href="myproduct.html">My Products</a>
+                    <a href="myfriend.html">My Friends</a>
+                    <a href="myaward.html">Awards</a>
+                    <a href='feedback.html'>Feedback & Support</a>
+                </div>
+            </div>
+            
+            <a href="product.html" class="sell-btn">Sell</a>
+        </div>
+    </header>
+
+    <main class="account-container">
+        <div class="account-content">
+            <div class="profile-section">
+                <div class="profile-header">
+                    <h1>Account Settings</h1>
+                </div>
+
+                <div class="profile-content">
+                    <div class="avatar-section">
+                        <img id="avatar-preview" class="avatar" src="" alt="Profile Picture">
+                        <input type="file" id="avatar-input" accept="image/*" class="hidden">
+                        <button id="change-avatar" class="btn-secondary">Change Picture</button>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-group">
+                            <label>Name</label>
+                            <span id="name-display" class="info-text"></span>
+                            <input type="text" id="name-input" class="info-input hidden" placeholder="Enter your name">
+                        </div>
+
+                        <div class="info-group">
+                            <label>Email</label>
+                            <span id="email-display" class="info-text"></span>
+                        </div>
+
+                        <div class="info-group">
+                            <label>Bio</label>
+                            <span id="bio-display" class="info-text"></span>
+                            <textarea id="bio-input" class="info-input hidden" placeholder="Tell us about yourself"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button id="edit-profile" class="btn-primary">Edit Profile</button>
+                    <button id="save-profile" class="btn-primary hidden">Save Changes</button>
+                    <button id="logout" class="btn-danger">Logout</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize variables
+        const userId = localStorage.getItem('usrid');
+        const APIKEY = "67aa072d020c065268e653c8";
+        const accountUrl = "https://testa-cdb8.restdb.io/rest/account";
+
+        // DOM Elements
+        const accountBtn = document.getElementById('account-btn');
+        const dropdown = document.querySelector('.dropdown');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const avatarInput = document.getElementById('avatar-input');
+        const changeAvatarBtn = document.getElementById('change-avatar');
+        const editProfileBtn = document.getElementById('edit-profile');
+        const saveProfileBtn = document.getElementById('save-profile');
+        const logoutBtn = document.getElementById('logout');
+
+        // Dropdown menu functionality
+        accountBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target) && e.target !== accountBtn) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Check login status
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!userId) {
+                alert('Please log in to view your account.');
+                window.location.href = 'login.html';
+                return;
+            }
+            loadUserProfile();
+        });
+
+        // Load user profile
+        async function loadUserProfile() {
+            try {
+                const response = await fetch(accountUrl, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache",
+                    },
+                });
+
+                const data = await response.json();
+                const userEmail = localStorage.getItem("usremail");
+                const user = data.find(u => u.email === userEmail);
+
+                if (user) {
+                    displayUserData(user);
+                    localStorage.setItem("change", user._id);
+                }
+            } catch (error) {
+                console.error("Failed to load profile:", error);
+            }
+        }
+
+        function displayUserData(user) {
+            document.getElementById('name-display').textContent = user.name || "Not set";
+            document.getElementById('email-display').textContent = user.email;
+            document.getElementById('bio-display').textContent = user.bio || "No bio yet";
+            document.getElementById('name-input').value = user.name || "";
+            document.getElementById('bio-input').value = user.bio || "";
+
+            if (user.avatar) {
+                const avatarBase64 = user.avatar;
+                if (avatarBase64.startsWith("data:image")) {
+                    avatarPreview.src = avatarBase64;
+                } else {
+                    const blob = base64ToBlob(avatarBase64, "image/png");
+                    avatarPreview.src = URL.createObjectURL(blob);
+                }
+            } else {
+                avatarPreview.src = "https://via.placeholder.com/150";
+            }
+        }
+
+        // Edit profile functionality
+        editProfileBtn.addEventListener('click', () => {
+            document.querySelectorAll('.info-input').forEach(el => el.classList.remove('hidden'));
+            document.querySelectorAll('.info-text').forEach(el => el.classList.add('hidden'));
+            editProfileBtn.classList.add('hidden');
+            saveProfileBtn.classList.remove('hidden');
+        });
+
+        // Avatar change functionality
+        changeAvatarBtn.addEventListener('click', () => {
+            avatarInput.click();
+        });
+
+        avatarInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    avatarPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Save profile changes
+        saveProfileBtn.addEventListener('click', async () => {
+            const updatedData = {
+                name: document.getElementById('name-input').value.trim(),
+                bio: document.getElementById('bio-input').value.trim(),
+            };
+
+            if (avatarInput.files[0]) {
+                const base64String = await fileToBase64(avatarInput.files[0]);
+                updatedData.avatar = base64String;
+            }
+
+            try {
+                const response = await fetch(
+                    `${accountUrl}/${localStorage.getItem("change")}`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-apikey": APIKEY,
+                            "Cache-Control": "no-cache",
+                        },
+                        body: JSON.stringify(updatedData),
+                    }
+                );
+
+                if (response.ok) {
+                    alert("Profile updated successfully!");
+                    location.reload();
+                } else {
+                    throw new Error("Failed to update profile");
+                }
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                alert("Failed to update profile. Please try again.");
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem("usremail");
+            localStorage.removeItem("usrid");
+            window.location.href = "http://127.0.0.1:5500/index.html";
+        });
+
+        // Utility functions
+        function base64ToBlob(base64, contentType) {
+            const byteCharacters = atob(base64);
+            const byteArrays = [];
+            
+            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                const slice = byteCharacters.slice(offset, offset + 512);
+                const byteNumbers = new Array(slice.length);
+                
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                
+                byteArrays.push(new Uint8Array(byteNumbers));
+            }
+            
+            return new Blob(byteArrays, { type: contentType });
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+</body>
+</html>

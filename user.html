@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - FindSell</title>
+    <link rel="stylesheet" href="userStyle.css">
+</head>
+<body>
+    <div class="welcome-message">
+        Welcome! <span id="usrem"></span>
+    </div>
+
+    <header class="header">
+        <div class="nav-container">
+            <a href="index2.html">
+                <img src="Selling_transparent-.png" alt="FindSell" class="logo">
+            </a>
+            
+            <div class="search-wrapper">
+                <input type="text" class="search-input" placeholder="Search for items...">
+                <button class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="nav-buttons">
+                <div class="account-wrapper">
+                    <button class="my-account-btn" id="account-btn">My Account</button>
+                    <div class="dropdown">
+                        <a href="myaccount.html">My Account</a>
+                        <a href="myproduct.html">My Products</a>
+                        <a href="myfriend.html">My Friends</a>
+                        <a href="myaward.html">Awards</a>
+                    </div>
+                </div>
+                <a href="product.html" class="sell-btn">Sell</a>
+            </div>
+        </div>
+    </header>
+  
+    <main class="main-content">
+        <div class="main">
+            <div class="product-panel">
+                <div class="product-header">
+                    <h1 id="u-n">User Profile</h1>
+                </div>
+    
+                <div class="product-content">
+                    <img id="img" src="" alt="User Profile">
+                    <div class="profile-actions">
+                        <button id="talk">Chat with this user!</button>
+                        <button id="add">Add Friend</button>
+                    </div>
+                    
+                    <div class="auth-panel" id="login-panel" style="display: none;">
+                        <div class="auth-content">
+                            <h3>Send Friend Request</h3>
+                            <h4>Describe Yourself!</h4>
+                            <textarea placeholder="Hi! Nice To Meet You" id="self"></textarea>
+                            <button id="send">Send Request</button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-item">
+                        <h3>User Information</h3>
+                        <p><strong>Name:</strong> <span id="name-display"></span></p>
+                        <p><strong>Email:</strong> <span id="email-display"></span></p>
+                        <p><strong>Account Bio:</strong> <span id="bio-display"></span></p>
+                    </div>
+    
+                    <div class="product-item">
+                        <h3>Recent Activity</h3>
+                        <p>No recent activity.</p>
+                    </div>
+
+                    <div class="product-item">
+                        <h3>Products</h3>
+                        <section id="u-p"></section>
+                    </div>
+
+                    <div class="product-item">
+                        <h3>Comments</h3>
+                        <section class="product-reviews">
+                            <div id="reviews-container"></div>
+                            <div class="comment-box">
+                                <textarea id="comment-input" class="comment-input" placeholder="Write your comment here..."></textarea>
+                                <button id="publish-btn" class="btn-publish">Publish</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!userId) {
+                document.getElementById('message').textContent = 'Please log in before checking in.';
+                document.getElementById('signInButton').disabled = true;
+                return;
+            }
+        });
+    </script>
+
+    <script>
+        let others = localStorage.getItem("selectedUser");
+        let other = JSON.parse(others);
+        let userId = localStorage.getItem("usrid");
+        let usrmail = localStorage.getItem("usremail");
+    </script>
+
+    <script>
+        const accountBtn = document.getElementById('account-btn');
+        const dropdown = document.querySelector('.dropdown');
+        
+        accountBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target) && event.target !== accountBtn) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        let comments = "https://testa-cdb8.restdb.io/rest/usercomment";
+        let testcomments = "https://assignmentfed-fb7a.restdb.io/rest/usercomment";
+
+        function base64ToUrl(base64) {
+            const byteCharacters = atob(base64.split(',')[1]); 
+            const byteArrays = [];
+        
+            for (let offset = 0; offset < byteCharacters.length; offset++) {
+                byteArrays.push(byteCharacters.charCodeAt(offset));
+            }
+        
+            const blob = new Blob([new Uint8Array(byteArrays)], { type: 'image/png' });
+            return URL.createObjectURL(blob);
+        }
+
+        // if user has no avatar make it null
+        if(other.otheravatar = 'unknown') {
+            document.getElementById("img").src = null;
+        } else {
+            const imageUrl = base64ToUrl(other.otheravatar);
+            document.getElementById("img").src = imageUrl;
+        }
+
+        // fetch the data of user selected
+        document.getElementById("name-display").innerText = other.othername;
+        document.getElementById("email-display").innerText = other.otheremail;
+        document.getElementById("bio-display").innerText = other.otherbio;
+
+        const testaccount = "https://assignmentfed-fb7a.restdb.io/rest/account";
+        const commenttesturl = "https://assignmentfed-fb7a.restdb.io/rest/usercomment";
+        const testproducturl = "https://assignmentfed-fb7a.restdb.io/rest/product";
+        const api = "67aa072d020c065268e653c8";
+        const test = "67971683f9d2bb616f181e2b";
+        const test3 = "67a9a09c020c068f77e6537d";
+        const APIKEY = api;
+
+        const friendlist = new Set(JSON.parse(localStorage.getItem("friend") || "[]"));
+        const test2account = "https://fedpart2-130c.restdb.io/rest/account";
+        const testmessage = "https://jackie2-b185.restdb.io/rest/message";
+        const userID = localStorage.getItem("usrid");
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            const response = await fetch("https://testa-cdb8.restdb.io/rest/account", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": "67a9a09c020c068f77e6537d",
+                    "Cache-Control": "no-cache"
+                }
+            });
+        
+            if (!response.ok) {
+                console.error("Failed to fetch data");
+                return;
+            }
+        
+            const data = await response.json(); 
+        
+            data.forEach(user => {
+                if (friendlist.has(user.usrid)) {
+                    sendRequestBtn.style.display = 'none';
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const authContent = document.getElementById("login-panel"); 
+            const sendRequestBtn = document.getElementById("add");
+        
+            if (!sendRequestBtn) {
+                console.error("sendRequestBtn is not found");
+                return;
+            }
+        
+            sendRequestBtn.addEventListener("click", function (event) {
+                event.stopPropagation();
+                authContent.style.display = "block"; 
+            });
+        
+            authContent.addEventListener("click", function (event) {
+                event.stopPropagation(); 
+            });
+        
+            document.body.addEventListener("click", function () {
+                authContent.style.display = "none"; 
+            });
+        });
+
+      document.getElementById("send").addEventListener("click", async function () {
+    const intro = document.getElementById("self").value.trim();
+
+    if (!intro) {
+        alert("Please introduce yourself.");
+        return;
+    }
+
+   
+    if (other.otherid === userID) {
+        alert("You cannot add yourself.");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "https://testa-cdb8.restdb.io/rest/message",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": APIKEY,
+                    "Cache-Control": "no-cache",
+                },
+                body: JSON.stringify({
+                    usrid: other.otherid,      
+                    posterid: userID,          
+                    sender: usrmail,           
+                    type: "Frequest",
+                    content: intro,
+                    time: new Date()
+                }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to send friend request");
+        }
+
+        alert("✅ Friend request sent!");
+
+       
+        document.getElementById("login-panel").style.display = "none";
+        document.getElementById("add").disabled = true;
+        document.getElementById("add").innerText = "Request Sent";
+
+    } catch (err) {
+        console.error(err);
+        alert("❌ Failed to send friend request. Try again.");
+    }
+});
+
+            try {
+                const s1 = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache",
+                    },
+                    body: JSON.stringify({
+                        usrid: other.otherid,
+                        type: "Frequest",
+                        content: document.getElementById("self").value,
+                        posterid: userID
+                    })
+                };
+                const msg = fetch(testmessage, s1)
+                    .then(response => {
+                        if(response.ok) {
+                            alert("Friend Request Sent");
+                        }
+                        if(!response.ok) {
+                            alert("fail to send friend Request, try again ");
+                        }
+                    });
+            }
+            catch(error) {
+                alert("Friend Request fail");
+            }
+    
+
+        document.getElementById("talk").addEventListener("click", function() {
+            window.location.href = 'talk.html';
+        });
+
+        async function loadComments() {
+            const set2 = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": APIKEY,
+                    "Cache-Control": "no-cache",
+                },
+            };
+            let comm = document.getElementById("reviews-container");
+            comm.innerHTML = '';
+            const com = await fetch(commenturl, set2);
+            const response = await com.json();
+            response.forEach(comment => {
+                if(comment.posterid == userId) {
+                    let userscomment = document.createElement("div");
+                    userscomment.innerHTML = `
+                        <p><img class='imgs' src=''> <strong><p style='margin-bottom:2vw'>${comment.name}: ${comment.comment}</p></p> 
+                        <p>Posted Time: <p class='time'> hha </p> </p>
+                    `;
+                    let imgElement = userscomment.querySelector(".imgs");
+                    let time = userscomment.querySelector(".time");
+                    time.innerHTML = comment.time;
+                    if (comment.posteravatar == 'unknown') {
+                        imgElement.src = "6596121.png";
+                    } else {
+                        imgElement.src = base64ToUrl(comment.posteravatar);
+                    }
+                    comm.appendChild(userscomment);
+                }
+            });
+        }
+
+        let hasproduct = [];
+        async function loadProducts() {
+            try {
+                const set = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache",
+                    },
+                };
+               
+                document.getElementById("u-p").innerHTML = '';
+              
+                const response = await fetch(producturl, set);
+                const data = await response.json();
+              
+                data.forEach(product => {
+                    if(product.id === other.otherid) {
+                        hasproduct.push(1);
+                    }
+                });
+
+                if(hasproduct.length == 0) {
+                    document.getElementById("u-p").innerHTML = 'This User Has No Product';
+                } else {
+                    data.forEach(product => {
+                        if(product.id === other.otherid) {
+                            const productItem = document.createElement("div");
+                            productItem.className = "product-item";
+                            productItem.dataset.id = product._id; 
+                            const base64Data = `${product.url}`; 
+                            const contentType = "image/png"; 
+                            
+                            function base64ToBlob(base64, contentType) {
+                                const byteCharacters = atob(base64);
+                                const byteArrays = [];
+                                for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                                    const slice = byteCharacters.slice(offset, offset + 512);
+                                    const byteNumbers = new Array(slice.length);
+                                    for (let i = 0; i < slice.length; i++) {
+                                        byteNumbers[i] = slice.charCodeAt(i);
+                                    }
+                                    byteArrays.push(new Uint8Array(byteNumbers));
+                                }
+                                return new Blob(byteArrays, { type: contentType });
+                            }
+                            
+                            const blob = base64ToBlob(base64Data, contentType);
+                            const blobUrl = URL.createObjectURL(blob);
+                            
+                            productItem.innerHTML = `
+                                <section style="width:100%;height:20vw">
+                                    <img src=${blobUrl} data-pid=${product.productID} data-usrid=${localStorage.getItem('usrid')} data-price='${product.price}' data-tag='${product.tag}' data-des='${product.Description}' data-brand='${product.Brand}' data-url='${blobUrl}' data-name='${product.name}' alt="Product Image" class="product-image" style="background-size:cover;background-position:center">
+                                </section>
+                                <div class="product-info">
+                                    <h3 class="name">${product.name || 'Unnamed Product'}</h3>
+                                    <p class="product-price">Price: ¥${product.price || 0}</p>
+                                    <p class="product-reviews">Comment: ${product.comments || 'No comments'}</p>
+                                </div>
+                            `;
+                            
+                            document.getElementById("u-p").appendChild(productItem);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to load products:", error);
+            }
+        }
+        
+        document.getElementById("u-p").addEventListener("click", function (event) {
+            let target = event.target;
+            if (target.classList.contains("product-image")) {
+                let productData = {
+                    productID: target.getAttribute("data-pid"),
+                    userID: target.getAttribute("data-usrid"),
+                    price: target.getAttribute("data-price"),
+                    tag: target.getAttribute("data-tag"),
+                    description: target.getAttribute("data-des"),
+                    brand: target.getAttribute("data-brand"),
+                    url: target.getAttribute("data-url"),
+                    name: target.getAttribute("data-name"),
+                };
+        
+                localStorage.setItem("selectedProduct", JSON.stringify(productData));
+                window.location.href = "product.html";
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            loadComments();
+        });
+
+        document.getElementById("publish-btn").addEventListener("click", async function() {
+            const commentInput = document.getElementById("comment-input");
+            const comment = commentInput.value.trim();
+           
+            if (!comment) {
+                alert("Please enter a comment before submitting.");
+                return;
+            }
+        
+            const productId = document.querySelector(".product-item").dataset.id;  
+            const userId = localStorage.getItem("usrid");  
+            const username = localStorage.getItem("usrname");
+            
+            const newComment = {
+                usrid: other.otherid,
+                name: localStorage.getItem("usrname"),
+                comment: comment,
+                posterid: userId,
+                posteravatar: other.otheravatar,
+                time: new Date()
+            };
+        
+            const response = await fetch(commenturl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-apikey": APIKEY,
+                    "Cache-Control": "no-cache",
+                },
+                body: JSON.stringify(newComment),
+            });
+        
+            if (response.ok) {
+                alert("Comment posted!");
+                commentInput.value = ""; 
+                loadComments(productId);  
+            } else {
+                alert("Failed to post comment. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

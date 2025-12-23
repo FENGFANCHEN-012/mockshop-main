@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Running Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            background: linear-gradient(to bottom, #87CEEB, #f0e68c);
+        }
+        .voucher {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let userId = localStorage.getItem('usrid');
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!userId) {
+                document.getElementById('message').textContent = 'Please log in before checking in.';
+                document.getElementById('signInButton').disabled = true;
+                return;
+            }})
+    </script>
+    <canvas id="gameCanvas"></canvas>
+    <div class="voucher" id="voucher">Congratulations! You've earned a 10% discount coupon!</div>
+    <script>
+        const API_KEY = "67aa072d020c065268e653c8";
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Player settings
+        const player = {
+            x: 50,
+            y: canvas.height - 150,
+            width: 50,
+            height: 50,
+            color: 'red',
+            velocityY: 0,
+            jumpStrength: -20,
+            gravity: 0.8,
+            isJumping: false,
+            grounded: false
+        };
+
+        const obstacles = [];
+        let score = 0;
+        let gameRunning = true;
+        let rewardGiven = false;
+        const voucherDiv = document.getElementById('voucher');
+
+        // Spawn random obstacles
+        function spawnObstacle() {
+            const size = Math.random() * 50 + 20;
+            obstacles.push({
+                x: canvas.width,
+                y: canvas.height - size,
+                width: size,
+                height: size,
+                color: 'green',
+                speed: 4 + Math.random() * 2
+            });
+        }
+
+        // Check and update rewards
+        async function handleRewards() {
+            if (score >= 1 && !rewardGiven) {
+                rewardGiven = true;
+                gameRunning = false; // Stop the game
+                voucherDiv.style.display = 'block';
+
+                const userId = localStorage.getItem("usrid");
+                if (!userId) {
+                    alert("User ID not found.");
+                    return;
+                }
+
+                // Fetch existing rewards
+                const awardResponse = await fetch("https://assignmentfed-fb7a.restdb.io/rest/award", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": API_KEY
+                    }
+                });
+
+                const awards = await awardResponse.json();
+                const userAwards = awards.filter(award => award.usrid === userId);
+
+                if (userAwards.length === 0) {
+                    // Create new rewards if none exist
+                    const newAward = await fetch("https://testa-cdb8.restdb.io/rest/award", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-apikey": API_KEY
+                        },
+                        body: JSON.stringify({
+                            usrid: userId,
+                            number: 1,
+                            type: '10%'
+                        })
+                    });
+
+                    const awardData = await newAward.json();
+                    localStorage.setItem("type10", awardData._id);
+                } else {
+                    // Update existing rewards
+                    userAwards.forEach(async award => {
+                        if (award.type === '10%') {
+                            localStorage.setItem("type10", award._id);
+                            await fetch(`https://testa-cdb8.restdb.io/rest/award/${award._id}`, {
+                                method: "PATCH",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "x-apikey": API_KEY
+                                },
+                                body: JSON.stringify({ number: award.number + 1 })
+                            });
+                        }
+                    });
+                }
+
+                alert('You earned 50 points! Game over.');
+                window.location.href='myaward.html'
+            }
+        }
+
+        // Game update logic
+        function update() {
+            if (!gameRunning) return;
+
+            handleRewards();
+
+            // Player physics
+            player.velocityY += player.gravity;
+            player.y += player.velocityY;
+
+            if (player.y > canvas.height - player.height) {
+                player.y = canvas.height - player.height;
+                player.velocityY = 0;
+                player.isJumping = false;
+                player.grounded = true;
+            } else {
+                player.grounded = false;
+            }
+
+            // Obstacle updates
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.x -= obs.speed;
+
+                // Remove off-screen obstacles
+                if (obs.x + obs.width < 0) {
+                    obstacles.splice(i, 1);
+                    score++;
+                }
+
+                // Collision detection
+                if (
+                    player.x < obs.x + obs.width &&
+                    player.x + player.width > obs.x &&
+                    player.y < obs.y + obs.height &&
+                    player.y + player.height > obs.y
+                ) {
+                    gameRunning = false;
+                    alert(`Game Over! Your score: ${score}`);
+                    document.location.reload();
+                    return;
+                }
+            }
+
+            // Spawn obstacles periodically
+            if (Math.random() < 0.01) {
+                spawnObstacle();
+            }
+        }
+
+        // Draw game elements
+        function draw() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw player
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Draw obstacles
+            obstacles.forEach(obs => {
+                ctx.fillStyle = obs.color;
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            });
+
+            // Draw score
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${score}`, 20, 40);
+        }
+
+        // Main game loop
+        function gameLoop() {
+            update();
+            draw();
+            if (gameRunning) {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', e => {
+            if (e.code === 'Space' && !player.isJumping && player.grounded) {
+                player.velocityY = player.jumpStrength;
+                player.isJumping = true;
+            } else if (e.code === 'Escape') {
+                gameRunning = false;
+                alert(`Your final score: ${score}`);
+                document.location.reload();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Start the game
+        gameLoop();
+    </script>
+</body>
+</html>

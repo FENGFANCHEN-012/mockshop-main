@@ -1,0 +1,73 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 2; 
+    display: none; 
+}
+.product{
+    
+}
+.font{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+ 
+}
+h3{
+    font-weight:700 ;
+    
+}
+#game{
+    transition: transform 0.3s ease;
+    margin-left:5vw;
+    gap:5vw;
+    margin-top:2vh;
+     width:90vw;
+   
+    
+     height:40vh;
+     display:flex;
+     justify-content: start;
+ 
+ 
+     
+ align-items: center;
+ 
+ ;z-index: 0;
+ }
+ #seller{
+    transition: transform 0.3s ease;
+    margin-left:5vw;
+    gap:5vw;
+    margin-top:2vh;
+     width:90vw;
+   
+     height:40vh;
+     display:flex;
+     justify-content: start;
+ 
+ 
+     
+ align-items: center;
+ 
+ ;z-index: 0;
+ }
+ #but2{
+    position: absolute;
+    z-index: 2;
+    margin-top:18vw ;
+    margin-left:50vw;
+ }
+ .pic{
+    width:50%;
+    height:20vw;
+    
+
+ }
+ .description{
+    width:50vw;
+    display: flex;
+    justify-content: start;
+ }

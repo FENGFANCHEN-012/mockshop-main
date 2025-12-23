@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - FindSell</title>
+    <link rel="stylesheet" href="productdetailStyle.css">
+</head>
+<body>
+    <header>
+        <div class="head">
+            <a href="index2.html">
+                <img class="logo" src="Selling_transparent-.png" alt="FindSell">
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search" placeholder="Search for items...">
+                <button class="bt">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="account-container">
+                <button class="account-btn" id="account-btn">My Account</button>
+                <div class="dropdown">
+                    <a href="myaccount.html">My Account</a>
+                    <a href="myproduct.html">My Products</a>
+                    <a href="myfriend.html">My Friends</a>
+                    <a href="myaward.html">Awards</a>
+                    <a href='feedback.html'>Feedback & Support</a>
+                </div>
+            </div>
+            
+            <a href="product.html" class="set">
+                <button class="inbt">Sell</button>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="product-main">
+            <div class="product-image-section">
+                <img class="product-image" alt="Product Image">
+            </div>
+
+            <div class="product-details">
+                <h2 id="name"></h2>
+                <h3>Brand: <span id="brand"></span></h3>
+                <div class="product-description">
+                    <h3>Product Details</h3>
+                    <p id="des"></p>
+                </div>
+                <p class="product-price"></p>
+                <button class="btn-buy">Add to Cart</button>
+            </div>
+        </div>
+
+        <section class="product-reviews">
+            <h2>User Reviews</h2>
+            <div id="reviews-container"></div>
+            <div class="comment-box">
+                <textarea id="comment-input" class="comment-input" placeholder="Write your review here..."></textarea>
+                <button id="publish-btn" class="btn-publish">Post Review</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 FindSell. All rights reserved.</p>
+        <p>
+            Follow us on: 
+            <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+            <a href="#" target="_blank" rel="noopener noreferrer">Twitter</a> | 
+            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </p>
+    </footer>
+
+    <script>
+        // User data
+        const usrmail = localStorage.getItem("usremail");
+        const userId = localStorage.getItem("usrid");
+
+        // Dropdown functionality
+        const accountBtn = document.getElementById('account-btn');
+        const dropdown = document.querySelector('.dropdown');
+
+        accountBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!dropdown.contains(event.target) && event.target !== accountBtn) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Product details
+        const APIKEY = "67aa072d020c065268e653c8";
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Load product details
+            document.querySelector(".product-image").src = localStorage.getItem("product-image");
+            document.getElementById("des").textContent = localStorage.getItem("product-description");
+            document.getElementById("name").textContent = localStorage.getItem("product-name");
+            document.querySelector(".product-price").textContent = '¥' + localStorage.getItem("product-price");
+            document.getElementById("brand").textContent = localStorage.getItem("product-brand");
+
+            loadReviews();
+        });
+
+        async function loadReviews() {
+            try {
+                const response = await fetch('https://testa-cdb8.restdb.io/rest/comment', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache",
+                    }
+                });
+
+                const reviews = await response.json();
+                const reviewsContainer = document.getElementById("reviews-container");
+                reviewsContainer.innerHTML = "";
+
+                reviews.forEach(review => {
+                    if (review.productID === localStorage.getItem("product-id")) {
+                        const reviewElement = document.createElement("div");
+                        reviewElement.className = "review-item";
+                        reviewElement.innerHTML = `
+                            <p><strong>${review.name || "Anonymous"}</strong></p>
+                            <p>${review.comment}</p>
+                        `;
+                        reviewsContainer.appendChild(reviewElement);
+                    }
+                });
+            } catch (error) {
+                console.error("Error loading reviews:", error);
+            }
+        }
+
+        document.getElementById("publish-btn").addEventListener("click", async function() {
+            const commentInput = document.getElementById("comment-input");
+            const commentText = commentInput.value.trim();
+
+            if (!commentText) {
+                alert("Please enter a review!");
+                return;
+            }
+
+            try {
+                await fetch('https://testa-cdb8.restdb.io/rest/comment', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY
+                    },
+                    body: JSON.stringify({
+                        name: localStorage.getItem("usrname") || "Anonymous",
+                        comment: commentText,
+                        productID: localStorage.getItem("product-id"),
+                        usrid: userId
+                    })
+                });
+
+                commentInput.value = "";
+                await loadReviews();
+            } catch (error) {
+                console.error("Error posting review:", error);
+                alert("Failed to post review. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>

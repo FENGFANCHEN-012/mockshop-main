@@ -1,0 +1,515 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#message{
+    margin-left:10vw
+}
+#messgae img{
+    width:5vw;
+    height:2vw
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Header styles */
+.header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+}
+
+.top-bar {
+    background-color: #f8f9fa;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.top-bar p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.main-header {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo img {
+    height: 40px;
+    display: block;
+}
+
+.search-wrapper {
+    flex: 1;
+    display: flex;
+    max-width: 600px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e1e1e1;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.search-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.search-button:hover {
+    background-color: #0052a3;
+}
+
+/* Auth Buttons */
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    position: relative;
+}
+
+.btn-auth {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #0066cc;
+    border-radius: 8px;
+    background-color: white;
+    color: #0066cc;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-auth:hover {
+    background-color: #0066cc;
+    color: white;
+}
+
+.btn-sell {
+    padding: 0.75rem 1.5rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.btn-sell:hover {
+    background-color: #218838;
+}
+
+/* Dropdown */
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    min-width: 180px;
+    margin-top: 0.5rem;
+    z-index: 1000;
+}
+
+.dropdown .tag {
+    padding: 0.75rem 1rem;
+}
+
+.dropdown .tag:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown .tag a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+}
+
+/* Navigation */
+.categories-nav {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    padding: 0.75rem 0;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.nav-link {
+    color: #495057;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+}
+
+.nav-link:hover {
+    color: #0066cc;
+}
+
+/* Main Content */
+.main-content {
+    padding-top: 200px;
+    padding-bottom: 2rem;
+}
+
+/* Game Section */
+.game-section {
+    background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 4rem;
+    color: white;
+    margin-top: 2rem;
+}
+
+.game-slide {
+    display: none;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.game-slide.active {
+    display: block;
+}
+
+.game-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.game-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.game-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.game-btn {
+    padding: 1rem 2rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.game-btn:hover {
+    background: #218838;
+}
+
+.next-btn {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.next-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Trusted Sellers Section */
+.trusted-sellers {
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.sellers-container {
+    width: 100%;
+    overflow: hidden;
+
+}
+
+.sellers-scroll {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: calc(100% * numberOfItems); 
+}
+
+.seller-card {
+    width: 100%;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.seller-avatar {
+    width: 80px;
+    height: 80px;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+}
+
+.seller-avatar:hover {
+    transform: scale(1.05);
+}
+
+.scroll-btn {
+    padding: 0.75rem 1.5rem;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.scroll-btn:hover {
+    background: #0052a3;
+}
+
+/* Product Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    height: 200px;
+    background: #f8f9fa;
+}
+
+.product-info {
+    padding: 1rem;
+}
+
+.price {
+    color: #0066cc;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.btn-load-more {
+    padding: 0.75rem 2rem;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-load-more:hover {
+    background: #0052a3;
+}
+
+.search-results {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 10;
+}
+
+.search-result-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.search-result-item:hover {
+    background: #f0f0f0;
+}
+
+/* msg section */
+#message-box {
+  margin-left:81vw;
+    margin-top: 5vw;
+    position: fixed;
+    top: 10vh; 
+ 
+    width: 12vw; 
+    height:40vw;
+    max-width: 400px; 
+    background: white;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    display: none;
+    z-index: 1000;
+}
+
+
+#message-box h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+
+#message-content {
+    max-height: 50vh; 
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+
+.message-item {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+}
+
+
+.message-item:last-child {
+    border-bottom: none;
+}
+
+
+#close-message-box {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.2rem;
+    background-color: #84bff9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+
+.btn-accept, .btn-reject {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin: 5px;
+}
+
+.btn-accept {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-reject {
+    background-color: #f44336;
+    color: white;
+}
+
+
+
+  
+
+/* Responsive */
+@media (max-width: 768px) {
+    #message-box {
+        top: 5vh;
+        right: 2vw;
+        width: 95vw;
+        max-width: 350px;
+    }
+
+    #message-content {
+        max-height: 60vh; 
+    }
+
+    .message-item {
+        font-size: 0.9rem;
+    }
+
+    .btn-accept, .btn-reject {
+        font-size: 0.9rem;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .search-wrapper {
+        width: 100%;
+    }
+
+    .nav-list {
+        overflow-x: auto;
+        padding: 0.5rem;
+        justify-content: flex-start;
+        gap: 1.5rem;
+    }
+
+    .nav-link {
+        white-space: nowrap;
+    }
+
+    .main-content {
+        padding-top: 220px;
+    }
+}

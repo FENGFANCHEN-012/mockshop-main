@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-In Page</title>
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="my.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .sign-in-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sign-in-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .progress {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+  
+  
+
+    <div class="container" >
+        <div class="title">Check In</div>
+        <div class="message" id="message">Loading, please wait...</div>
+        <button class="sign-in-btn" id="signInButton" onclick="signIn()" disabled>Check In</button>
+        <div class="progress" id="progress">Consecutive Check-In Days: <span id="days">0</span>/15</div>
+    </div>
+
+    <script>
+        const APIKEY = "67aa072d020c065268e653c8";//678fa7439bd0c87432ac8bee
+        const apiUrl = 'https://testa-cdb8.restdb.io/rest/check'; // https://jackm-ff5c.restdb.io/rest/check
+        const awardurl = "https://testa-cdb8.restdb.io/rest/award"
+        const userId = localStorage.getItem("usrid"); 
+        let signedInDays = 0;
+        let canSignIn = false;
+       // Let user login first
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (userId===null) {
+                document.getElementById('message').textContent = 'Please log in before checking in.';
+                document.getElementById('signInButton').disabled = true;
+                return;
+            }
+            
+           // get data of api
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache"
+                    }
+                });
+
+                if (!response.ok) throw new Error("Unable to fetch data.");
+                const data = await response.json();
+                 
+                // Find current user data
+                let currentUser = data.find(user => user.usrid === userId);
+
+                if (!currentUser) {
+
+
+                    // If user data does not exist, send POST request to create user
+                    await createUser(userId);
+                    const newResponse = await fetch(apiUrl, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-apikey": APIKEY,
+                            "Cache-Control": "no-cache"
+                        }
+                    });
+
+                    if (!newResponse.ok) throw new Error("Unable to fetch data after creating user.");
+                    const newData = await newResponse.json();
+                    currentUser = newData.find(user => user.usrid === userId);
+                }
+
+
+
+                // create user's data
+                if (currentUser) {
+                    signedInDays = currentUser.day || 0;
+                    const lastSignInDate = currentUser.lastdate ? currentUser.lastdate.split('T')[0] : null;
+                    const today = new Date().toISOString().split('T')[0];
+                      // compare last date of signing in to current date
+                    canSignIn = lastSignInDate !== today;
+                    updateUI();
+
+
+                    console.log("Last sign-in date:", currentUser.lastdate);
+console.log("Today:", today);
+console.log("Comparison result:", lastSignInDate !== today);
+
+                }
+            } catch (error) {
+                console.error("Loading failed:", error);
+                document.getElementById('message').textContent = 'Failed to load, please refresh and try again.';
+            }
+        });
+///
+
+// 
+        function updateUI() {
+            document.getElementById('days').textContent = signedInDays;
+            document.getElementById('message').textContent = canSignIn
+                ? 'Check in now to claim a reward after 15 consecutive days!'
+                : 'You have already checked in today. Please come back tomorrow!';
+          // prevent user from signing in
+            document.getElementById('signInButton').disabled = !canSignIn;
+           
+        }
+
+        async function signIn() {
+            if (!canSignIn) return;
+        
+            try {
+
+                const today = new Date().toISOString().split('T')[0];
+                const response = await fetch(`${apiUrl}/${localStorage.getItem("checkid")}`, {
+                    method: "PATCH", 
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY
+                    },
+                    body: JSON.stringify({
+                        usrid: userId,
+                        day: signedInDays >= 15 ? 0 : signedInDays + 1,
+                        lastdate: today
+                    })
+                });
+                
+                if (!response.ok) throw new Error("Check-in failed.");
+        
+                
+                canSignIn = false;
+                updateUI();
+                // refresh pages
+                window.location.reload();
+        
+                if (signedInDays >= 15) {
+                    // Handle reward creation or update
+                    const awardResponse = await fetch("https://testa-cdb8.restdb.io/rest/award",{method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "x-apikey": APIKEY
+                            },
+                         
+                            
+                         })
+                    const awards = await awardResponse.json();
+                    const userAward = awards.find(award => award.usrid === userId);
+        
+                    if (!userAward) {
+                        // No reward exists, create one
+                        await fetch("https://testa-cdb8.restdb.io/rest/rest/award", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "x-apikey": APIKEY
+                            },
+                            body: JSON.stringify({
+                                usrid: userId,
+                                number: 0,
+                                type: '20%'
+                            })
+                        });
+                    } else {
+                        // Reward exists, update the number
+                        await fetch(`https://testa-cdb8.restdb.io/rest/award/${userAward._id}`, {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "x-apikey": APIKEY
+                            },
+                            body: JSON.stringify({
+                                number: userAward.number + 1
+                            })
+                        });
+                    }
+        
+                    alert('Congratulations! You have checked in for 15 consecutive days. Your reward has been sent to your account.');
+                } else {
+                    alert(`Check-in successful! You have checked in for ${signedInDays+1} consecutive days.`);
+                }
+            } catch (error) {
+                console.error("Check-in failed:", error);
+                alert('Check-in failed, please try again later.');
+            }
+        }
+
+        async function createUser(userId) {
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY
+                    },
+                    body: JSON.stringify({
+                        usrid: userId,
+                        day: 0,
+                        lastdate: null
+                    })
+                });
+                const responseData = await response.json();
+                if (!response.ok) throw new Error("Unable to create user.");
+                console.log("User created successfully.");
+                localStorage.setItem("checkid", responseData._id);
+            } catch (error) {
+                console.error("User creation failed:", error);
+            }
+        }
+    </script>
+</body>
+</html>

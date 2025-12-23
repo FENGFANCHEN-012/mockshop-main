@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Friends - FindSell</title>
+    <link rel="stylesheet" href="myfriendStyle.css">
+</head>
+<body>
+    <header>
+        <div class="head">
+            <a href="index2.html">
+                <img class="logo" src="Selling_transparent-.png" alt="FindSell">
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search" placeholder="Search for friends...">
+                <button class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="account-container">
+                <button class="account-btn" id="account-btn">My Account</button>
+                <div class="dropdown">
+                    <a href="myaccount.html">My Account</a>
+                    <a href="myproduct.html">My Products</a>
+                    <a href="myfriend.html">My Friends</a>
+                    <a href="myaward.html">Awards</a>
+                    <a href='feedback.html'>Feedback & Support</a>
+                </div>
+            </div>
+            
+            <a href="product.html" class="sell-btn">Sell</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="friends-container">
+            <div class="friends-header">
+                <h1>My Friends</h1>
+                <div class="friends-controls">
+                    <input type="text" id="friendSearch" placeholder="Search friends..." class="friend-search">
+                </div>
+            </div>
+
+            <div id="friends-grid" class="friends-grid">
+                <!-- Friends will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 FindSell. All rights reserved.</p>
+        <p>
+            Follow us on: 
+            <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+            <a href="#" target="_blank" rel="noopener noreferrer">Twitter</a> | 
+            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </p>
+    </footer>
+
+    <script>
+        // Initialize variables
+        const friendlist = localStorage.getItem("friend")
+        const userId = localStorage.getItem('usrid');
+        const APIKEY = "67aa072d020c065268e653c8";
+        const testurl = "67a9a09c020c068f77e6537d"
+        const baseUrl = "https://testa-cdb8.restdb.io/rest/account";
+       const testaccount = "https://fedpart2-130c.restdb.io/rest/account";
+      
+        // Account dropdown functionality
+        const accountBtn = document.getElementById('account-btn');
+        const dropdown = document.querySelector('.dropdown');
+        
+        accountBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target) && event.target !== accountBtn) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Check login status
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!userId) {
+                alert('Please log in to view your friends.');
+                window.location.href = 'login.html';
+                return;
+            }
+            loadFriends();
+        });
+
+        // Load friends
+        async function loadFriends() {
+            try {
+                const response = await fetch(testaccount, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": testurl,
+                        "Cache-Control": "no-cache",
+                    }
+                });
+
+                const users = await response.json();
+                const friendsGrid = document.getElementById('friends-grid');
+                friendsGrid.innerHTML = '';
+               
+                const otherUsers = users.filter(user => friendlist.includes(user.usrid))
+
+                if (otherUsers.length === 0) {
+                    friendsGrid.innerHTML = "<p class='no-friends'>No friends found.</p>";
+                    return;
+                }
+
+                otherUsers.forEach(user => {
+                    const friendCard = document.createElement('div');
+                    friendCard.className = 'friend-card';
+                    
+                    friendCard.innerHTML = `
+                        <div class="friend-avatar-container">
+                            <img src="${user.avatar || 'default-avatar.png'}" alt="${user.name}" class="friend-avatar">
+                        </div>
+                        <div class="friend-info">
+                            <h3>${user.name || 'Unnamed User'}</h3>
+                            <p class="friend-email">${user.email}</p>
+                            <p class="friend-bio">${user.bio || 'No bio available.'}</p>
+                            <button class="view-profile-btn">View Profile</button>
+                        </div>
+                    `;
+
+                    friendCard.querySelector('.view-profile-btn').addEventListener('click', () => {
+                        localStorage.setItem("selectedUser", JSON.stringify({
+                            otherid: user.usrid,
+                            otheremail: user.email,
+                            otherbio: user.bio,
+                            otheravatar: user.avatar,
+                            othername: user.name
+                        }));
+                        window.location.href = 'user.html';
+                    });
+
+                    friendsGrid.appendChild(friendCard);
+                });
+            } catch (error) {
+                console.error("Failed to load friends:", error);
+            }
+        }
+
+        // Friend search functionality
+        const searchInput = document.getElementById('friendSearch');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const friends = document.querySelectorAll('.friend-card');
+            
+            friends.forEach(friend => {
+                const name = friend.querySelector('h3').textContent.toLowerCase();
+                const email = friend.querySelector('.friend-email').textContent.toLowerCase();
+                const bio = friend.querySelector('.friend-bio').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || email.includes(searchTerm) || bio.includes(searchTerm)) {
+                    friend.style.display = 'flex';
+                } else {
+                    friend.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in/Sign up</title>
+    <link rel="stylesheet" href="loginStyle.css">
+</head>
+<body>
+    <header>
+        <div class="head">
+            <a href="index.html"><img class="logo" src="Selling_transparent-.png" alt="Find Sell"></a>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search for items...">
+                <button class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </button>
+            </div>
+            <div class="header-buttons">
+                <a href="login.html" class="set btn">Login</a>
+                <a href="sign up.html" class="set btn">Sign up</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="login-container">
+        <div class="login-form-wrapper">
+            <h1>Welcome Back!</h1>
+            <p class="login-subtext">Log in to FindSell</p>
+
+            <form id="login">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwd">Password</label>
+                    <input type="password" id="passwd" name="password" required>
+                </div>
+                <button type="submit" class="login-button">Log In</button>
+            </form>
+
+            <p class="signup-link">New to FindSell? <a href="sign%20up.html">Sign up here</a></p>
+        </div>
+    </main>
+
+    <script>
+        account = "https://testa-cdb8.restdb.io/rest/account";
+        api = "67aa072d020c065268e653c8";
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let login = document.getElementById("login");
+            login.addEventListener("submit", async function(event) {
+                event.preventDefault();
+                let email = document.getElementById("email").value;
+                let passwd = document.getElementById("passwd").value;
+
+                if (!email || !passwd) {
+                    alert("Email and Password cannot be empty!");
+                    return;
+                }
+
+                let settings = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": api,
+                        "Cache-Control": "no-cache",
+                    }
+                };
+
+                try {
+                    let search = await fetch(account, settings);
+                    const data = await search.json();
+                    let check = false;
+                    
+                    for(let i of data) {
+                        if(i.email === email && i.passwd === passwd) {
+                            alert("Log in successful");
+                            alert("Welcome!");
+                            check = true;
+                            localStorage.setItem("usrid", i.usrid);
+                            localStorage.setItem("usremail", i.email);
+                            localStorage.setItem("usrpasswd", i.passwd);
+                            window.location.assign("index2.html");
+                            break;
+                        }
+                    }
+                    
+                    if(!check) {
+                        alert("Invalid email or password, try again.");
+                    }
+                } catch(error) {
+                    alert("Error occurred during login. Please try again.");
+                    console.error(error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

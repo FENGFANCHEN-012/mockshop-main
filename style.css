@@ -1,0 +1,98 @@
+.panel{
+    
+    width:45vw;
+    height:60vh;
+    background-color: beige;
+    display: none;
+    z-index: 20000;
+}
+.panel2{
+
+    width:45vw;
+    height:60vh;
+    background-color: beige;
+  display: none;
+    z-index: 20000;
+}
+.log{
+    width:95%;
+    margin-left: 2.5%;
+    border: 2px solid #000000;
+    color:black;
+}
+.lgif{
+    border-radius: 2vw;
+    margin-top: 2vw;
+   width:90%;
+   height:35vw;
+   display: flex;
+   justify-content: space-around;
+   background-color:azure;
+   z-index: 10;
+   position: relative;
+}
+hr{
+    color:black;
+    width:100%;
+    z-index: 100;
+    position: absolute;
+}
+.opa{
+    width:100vw;
+    height:100vh;
+  overflow:hidden;
+  opacity: 1;
+  color:aquamarine;
+  z-index: 0;
+  position: relative;
+}
+.dropd {
+        width: 19vw;
+        height: 3vw;
+        background-color: orange;
+        
+        align-items: center;
+        margin-left: 2vw;
+        margin-bottom: 0;
+        border: 2px solid #FFFFFF;
+        position: relative;}
+.dropdown{
+    position: absolute;
+    width: 20vw;
+    height: 10vw;
+    color: orange;
+    background-color: aquamarine;
+    display: none;
+    justify-content: center;
+  top:1vw;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    border: 2px solid #FFFFFF;
+    
+}
+.tag{
+    width:20vw;
+    
+
+}
+.tag :hover{
+    transform: scale(1.1);
+}
+.dropdown2{
+    position: absolute;
+    width: 20vw;
+    height: 10vw;
+    color: orange;
+    background-color: aquamarine;
+    display: none;
+    justify-content: center;
+  top:1vw;
+margin-top:22.4%;
+    left: 70%;
+    transform: translateX(-50%);
+    z-index: 10;
+    border: 2px solid #FFFFFF;
+    
+    
+}

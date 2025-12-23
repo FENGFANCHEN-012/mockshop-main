@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Awards - FindSell</title>
+    <link rel="stylesheet" href="myaward.css">
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body>
+    <header>
+        <div class="head">
+            <a href="index2.html">
+                <img class="logo" src="Selling_transparent-.png" alt="FindSell">
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search" placeholder="Search for items...">
+                <button class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="account-container">
+                <button class="account-btn" id="account-btn">My Account</button>
+                <div class="dropdown">
+                    <a href="myaccount.html">My Account</a>
+                    <a href="myproduct.html">My Products</a>
+                    <a href="myfriend.html">My Friends</a>
+                    <a href="myaward.html">Awards</a>
+                    <a href='feedback.html'>Feedback & Support</a>
+                </div>
+            </div>
+            
+            <a href="product.html" class="sell-btn">Sell</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="awards-container">
+            <div class="awards-header">
+                <h1>My Awards</h1>
+                <div class="awards-summary">
+                    <p>Total Vouchers: <span id="voucher-count">0</span></p>
+                </div>
+            </div>
+
+            <div id="awards-loading" style="display: flex; justify-content: center; width: 100%;">
+                <dotlottie-player src="https://lottie.host/92d876b3-0b70-4bf0-beae-400c681ff9dd/YU72bij2XY.lottie" 
+                    background="transparent" 
+                    speed="1" 
+                    style="width: 300px; height: 300px" 
+                    loop 
+                    autoplay>
+                </dotlottie-player>
+            </div>
+
+            <div id="awards-grid" class="awards-grid">
+                <!-- Awards will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 FindSell. All rights reserved.</p>
+        <p>
+            Follow us on: 
+            <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+            <a href="#" target="_blank" rel="noopener noreferrer">Twitter</a> | 
+            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </p>
+    </footer>
+
+    <script>
+        // Initialize variables
+        const userId = localStorage.getItem('usrid');
+        const APIKEY = "67aa072d020c065268e653c8";
+        const loadingAnimation = document.getElementById('awards-loading');
+
+        // Account dropdown functionality
+        const accountBtn = document.getElementById('account-btn');
+        const dropdown = document.querySelector('.dropdown');
+        
+        accountBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target) && event.target !== accountBtn) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Check login status
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!userId) {
+                alert('Please log in to view your awards.');
+                window.location.href = 'login.html';
+                return;
+            }
+            loadAwards();
+        });
+
+        // Load awards
+        async function loadAwards() {
+            try {
+                const response = await fetch("https://testa-cdb8.restdb.io/rest/award", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": APIKEY,
+                        "Cache-Control": "no-cache",
+                    }
+                });
+
+                const awards = await response.json();
+                const awardsGrid = document.getElementById('awards-grid');
+                
+                // Hide loading animation once data is loaded
+                loadingAnimation.style.display = 'none';
+                awardsGrid.innerHTML = '';
+
+                const userAwards = awards.filter(award => award.usrid === userId);
+                document.getElementById('voucher-count').textContent = userAwards.length;
+
+                if (userAwards.length === 0) {
+                    awardsGrid.innerHTML = "<p class='no-awards'>No awards available.</p>";
+                    return;
+                }
+
+                userAwards.forEach(award => {
+                    const awardCard = document.createElement('div');
+                    awardCard.className = 'award-card';
+                    
+                    awardCard.innerHTML = `
+                        <div class="award-image-container">
+                            <img src="dca71ba1-6f4a-4baa-87bc-6024b801fd0c.jpg" alt="Award" class="award-image">
+                        </div>
+                        <div class="award-info">
+                            <h3>${award.type || 'Unnamed Award'}</h3>
+                            <p class="award-number">Voucher #${award.number || 'N/A'}</p>
+                            <button class="use-award-btn">Use Voucher</button>
+                        </div>
+                    `;
+
+                    awardCard.querySelector('.use-award-btn').addEventListener('click', () => {
+                        localStorage.setItem("reward-id", award._id);
+                        window.location.href = 'product.html';
+                    });
+
+                    awardsGrid.appendChild(awardCard);
+                });
+            } catch (error) {
+                // Hide loading animation and show error message
+                loadingAnimation.style.display = 'none';
+                console.error("Failed to load awards:", error);
+                const awardsGrid = document.getElementById('awards-grid');
+                awardsGrid.innerHTML = "<p class='error-message'>Failed to load awards. Please try again later.</p>";
+            }
+        }
+    </script>
+</body>
+</html>

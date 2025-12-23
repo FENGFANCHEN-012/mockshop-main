@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - FindSell</title>
+    <link rel="stylesheet" href="signupStyle.css">
+</head>
+<body>
+    <header>
+        <div class="head">
+            <a href="index.html"><img class="logo" src="Selling_transparent-.png" alt="Find Sell"></a>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search for items...">
+                <button class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </button>
+            </div>
+            <div class="header-buttons">
+                <a href="login.html" class="set btn">Login</a>
+                <a href="sign up.html" class="set btn">Sign up</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="signup-container">
+        <div class="signup-form-wrapper">
+            <h1>Join FindSell Today!</h1>
+            <p class="signup-subtext">Create your account</p>
+
+            <form id="signup">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwd">Password</label>
+                    <input type="password" id="passwd" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-passwd">Confirm Password</label>
+                    <input type="password" id="confirm-passwd" name="confirm-password" required>
+                </div>
+                <button type="submit" class="signup-button">Sign Up</button>
+            </form>
+
+            <p class="login-link">Already have an account? <a href="login.html">Log In Here</a></p>
+        </div>
+    </main>
+
+    <script>
+        account = "https://testa-cdb8.restdb.io/rest/account";
+        api = "67aa072d020c065268e653c8";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const signupForm = document.getElementById("signup");
+
+            signupForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("passwd").value.trim();
+                const passwordConfirm = document.getElementById("confirm-passwd").value.trim();
+
+                if (!email || !password || !passwordConfirm) {
+                    alert("Email and Password fields cannot be empty!");
+                    return;
+                }
+                if (password.length < 8 || password.length > 20 || !/\d/.test(password)) {
+                    alert("Password must be between 8 and 20 characters long and include at least one number.");
+                    return;
+                }
+
+                if (password !== passwordConfirm) {
+                    alert("The passwords do not match!");
+                    return;
+                }
+
+                const set = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": api,
+                        "Cache-Control": "no-cache",
+                    },
+                }
+                const check = await fetch(account, set)
+                const data = await check.json();
+
+                for (let i of data) {
+                    if (i.email === email) {
+                        alert("This email has been registered!");
+                        return;
+                    }
+                }
+
+                function generateUniqueID() {
+                    return 'user_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                }
+                
+                const message = {
+                    email: email,
+                    passwd: password,
+                    bio: 'unknown',
+                    avatar: 'unknown',
+                    name: 'unknown',
+                    usrid: generateUniqueID()
+                };
+
+                const settings = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-apikey": api,
+                        "Cache-Control": "no-cache",
+                    },
+                    body: JSON.stringify(message),
+                };
+
+                try {
+                    const response = await fetch(account, settings);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    const result = await response.json();
+
+                    alert("Sign Up successful!");
+                    localStorage.setItem("userid", result._id);
+                    window.location.assign("login.html");
+                } catch (error) {
+                    console.error("Error occurred while signing up:", error);
+                    alert("An error occurred. Please try again.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

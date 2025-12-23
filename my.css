@@ -1,0 +1,98 @@
+.product-panel {
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.product-header h1 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 700;
+    color: #333;
+}
+
+.product-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.product-search {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.product-content {
+
+    display: flex;
+    width:90vw;
+    flex-wrap: wrap;
+    justify-content: center;
+   gap:2vw
+}
+
+.product-item {
+    
+    width: 40%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: left;
+    flex-wrap: warp;
+}
+
+.product-image {
+    box-shadow: offset-x offset-y blur-radius spread-radius color;
+    width: 100%;
+    background-position: center;
+    height: 20vw;
+    border-radius: 8px;
+}
+
+.product-info {
+    padding: 10px 0;
+}
+
+.product-info h3 {
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.product-price {
+    color: #000;
+    font-weight: 600;
+    margin-right:35vw;
+
+    width:100%;
+}
+
+.product-reviews {
+    color: #777;
+    font-size: 14px;
+}
