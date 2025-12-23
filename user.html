@@ -108,6 +108,7 @@
     </script>
 
     <script>
+        const COMMENT_API = "https://testa-cdb8.restdb.io/rest/usercomment";
         let others = localStorage.getItem("selectedUser");
         let other = JSON.parse(others);
         let userId = localStorage.getItem("usrid");
@@ -303,38 +304,58 @@
             window.location.href = 'talk.html';
         });
 
-        async function loadComments() {
-            const set2 = {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-apikey": APIKEY,
-                    "Cache-Control": "no-cache",
-                },
-            };
-            let comm = document.getElementById("reviews-container");
-            comm.innerHTML = '';
-            const com = await fetch(commenturl, set2);
-            const response = await com.json();
-            response.forEach(comment => {
-                if(comment.posterid == userId) {
-                    let userscomment = document.createElement("div");
-                    userscomment.innerHTML = `
-                        <p><img class='imgs' src=''> <strong><p style='margin-bottom:2vw'>${comment.name}: ${comment.comment}</p></p> 
-                        <p>Posted Time: <p class='time'> hha </p> </p>
-                    `;
-                    let imgElement = userscomment.querySelector(".imgs");
-                    let time = userscomment.querySelector(".time");
-                    time.innerHTML = comment.time;
-                    if (comment.posteravatar == 'unknown') {
-                        imgElement.src = "6596121.png";
-                    } else {
-                        imgElement.src = base64ToUrl(comment.posteravatar);
-                    }
-                    comm.appendChild(userscomment);
-                }
-            });
+      async function loadComments() {
+    try {
+        const res = await fetch(COMMENT_API, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache",
+            },
+        });
+
+        const comments = await res.json();
+        const container = document.getElementById("reviews-container");
+        container.innerHTML = "";
+
+        let hasComment = false;
+
+        comments.forEach(comment => {
+            
+            if (comment.usrid === other.otherid) {
+                hasComment = true;
+
+                const div = document.createElement("div");
+                div.className = "review-item";
+
+                const avatar =
+                    comment.posteravatar && comment.posteravatar !== "unknown"
+                        ? base64ToUrl(comment.posteravatar)
+                        : "6596121.png";
+
+                div.innerHTML = `
+                    <div class="review-header">
+                        <img src="${avatar}" class="imgs">
+                        <strong>${comment.name}</strong>
+                    </div>
+                    <p>${comment.comment}</p>
+                    <small>${new Date(comment.time).toLocaleString()}</small>
+                `;
+
+                container.appendChild(div);
+            }
+        });
+
+        if (!hasComment) {
+            container.innerHTML = "<p>No comments yet.</p>";
         }
+
+    } catch (err) {
+        console.error("Load comments failed:", err);
+    }
+}
+
 
         let hasproduct = [];
         async function loadProducts() {
@@ -431,46 +452,45 @@
             loadComments();
         });
 
-        document.getElementById("publish-btn").addEventListener("click", async function() {
-            const commentInput = document.getElementById("comment-input");
-            const comment = commentInput.value.trim();
-           
-            if (!comment) {
-                alert("Please enter a comment before submitting.");
-                return;
-            }
-        
-            const productId = document.querySelector(".product-item").dataset.id;  
-            const userId = localStorage.getItem("usrid");  
-            const username = localStorage.getItem("usrname");
-            
-            const newComment = {
-                usrid: other.otherid,
+      document.getElementById("publish-btn").addEventListener("click", async () => {
+    const input = document.getElementById("comment-input");
+    const text = input.value.trim();
+
+    if (!text) {
+        alert("Please write a comment.");
+        return;
+    }
+
+    try {
+        const res = await fetch(COMMENT_API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache",
+            },
+            body: JSON.stringify({
+                usrid: other.otherid,          
+                posterid: userID,              
                 name: localStorage.getItem("usrname"),
-                comment: comment,
-                posterid: userId,
+                comment: text,
                 posteravatar: other.otheravatar,
                 time: new Date()
-            };
-        
-            const response = await fetch(commenturl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-apikey": APIKEY,
-                    "Cache-Control": "no-cache",
-                },
-                body: JSON.stringify(newComment),
-            });
-        
-            if (response.ok) {
-                alert("Comment posted!");
-                commentInput.value = ""; 
-                loadComments(productId);  
-            } else {
-                alert("Failed to post comment. Please try again.");
-            }
+            }),
         });
+
+        if (!res.ok) throw new Error("Post failed");
+
+        input.value = "";
+        loadComments();
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to post comment.");
+    }
+});
+
+   
     </script>
 </body>
 </html>
